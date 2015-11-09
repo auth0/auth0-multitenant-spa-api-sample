@@ -1,0 +1,104 @@
+extends layout
+
+block content  
+  .login-box
+    h1 Auth0 Multitenant Sample
+    p Login to start using the resources available for your tenant
+    br
+    button(onclick="signin()") Login
+  .logged-in-box(style="display:none;")
+    h4 Welcome 
+      span.nickname
+    .panel.panel-primary
+      .panel-heading Your profile:
+      pre.profile
+    .panel.panel-primary
+      .panel-heading Call the API
+      .panel-body
+        button.btn.btn-warning.call-api(onclick="callAPI()") Invoke
+        h4 Result
+        pre.api-result
+
+  script.
+    var API_BASE_URL = 'http://' + window.location.hostname + ':' + 8080;
+    
+    var lock = new Auth0Lock('#{auth0ClientId}','#{auth0Domain}');
+    
+    function signin() {
+      lock.show();
+    }
+
+    function reloadProfile(token){
+      var id_token = token || localStorage.getItem('id_token');
+      lock.getProfile(id_token, function(err, profile) {
+        if (err) {
+          console.log('There was an error getting profile from id_token saved in localStorage ',err);
+          logout();
+        } else {
+          showLoggedInUser(profile);
+        }
+      });
+    }
+
+    /*
+    * Display profile properties of logged in user
+    */
+    function showLoggedInUser(profile){
+      $('.login-box').hide();
+      $('.logged-in-box').show();
+      $('.nickname').text(profile.nickname);
+      $('.profile').text(JSON.stringify(profile,null,2));
+      $('.profile-image').attr('src', profile.picture);
+    }
+
+    function logout(){
+      $.ajax({
+        type: 'GET',
+        url: 'https://#{auth0Domain}/v2/logout'
+      }).then(function(data){
+        localStorage.removeItem('id_token');
+        $('.login-box').show();
+        $('.logged-in-box').hide(); 
+      }).fail(function(err){
+        console.log('failed to logout',err);
+      });
+    }
+
+    function callAPI (){
+      $('button.call-api').attr('disabled','disabled');
+      $('.api-result').text('Loading...');
+      $.ajax({
+        type: 'GET',
+        url: API_BASE_URL + '/api/users',
+        headers:{
+          Authorization: 'Bearer ' + localStorage.getItem('id_token')
+        }
+      }).then(function(data){
+        $('.api-result').text(JSON.stringify(data,null,2));
+      }).fail(function(err){
+        $('.api-result').text(JSON.stringify(err,null,2));
+      }).always(function(){
+        $('button.call-api').removeAttr('disabled');
+      });
+    }
+
+    $(document).ready(function() {
+      var hash = lock.parseHash();
+      //handle redirection from iDP after login
+      if (hash) {
+        window.location.hash = ''; //clean hash
+        console.log('hash',hash);
+        if (hash.error) {
+          console.log('Error in parsed hash ' + hash.error );
+          logout
+         } else {
+          //initial login
+          localStorage.setItem('id_token', hash.id_token);
+          reloadProfile(hash.id_token);           
+        }
+      } else {
+        //handle case of page refreshed by already logged-in user
+        reloadProfile();
+      }
+
+    });

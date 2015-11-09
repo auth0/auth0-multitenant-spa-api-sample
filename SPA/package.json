@@ -1,0 +1,17 @@
+{
+  "name": "auth0-multitenant-spa-api-sample",
+  "version": "1.0.0",
+  "description": "Auth0 multitenant sample - SPA side",
+  "repository": "git://github.com/auth0/auth0-multitenant-spa-api-sample",
+  "author": "Auth0",
+  "license": "MIT",
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "express": "~4.13.1",
+    "jade": "~1.11.0",
+    "lodash": "^3.10.1",
+    "morgan": "~1.6.1"
+  }
+}
