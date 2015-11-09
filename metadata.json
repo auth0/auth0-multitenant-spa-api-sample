@@ -1,0 +1,11 @@
+{
+  "name": "Multitenant App",
+  "type": "sample",
+  "tags": [
+    "javascript",
+    "nodejs",
+    "web",
+    "spa",
+    "multi-tenant"
+  ]
+}
