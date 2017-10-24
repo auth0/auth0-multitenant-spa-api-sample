@@ -61,35 +61,9 @@ app.get('/', function(req, res, next) {
 });
 ```
 
-Once the initial page is rendered, the app continues as a JQuery Single Page App. It uses the `auth0Domain` and `auth0ClientId` obtained from server side to configure a new instance of **Lock**, which will be used to perform the Login.
+Once the initial page is rendered, the app continues as a JQuery Single Page App. It uses the `auth0Domain` and `auth0ClientId` obtained from server side to configure auth0.js, which will be used to perform the Login.
 
-```jade
-block content  
-  .login-box
-    h1 Auth0 Multitenant Sample
-    p Login to start using the resources available for your tenant
-    br
-    button(onclick="signin()") Login
-
-  script.
-  	var lock = new Auth0Lock('#{auth0ClientId}','#{auth0Domain}');
-    
-    function signin() {
-      lock.show();
-    }
-
-    //handle redirection from identity provider after login
-    $(document).ready(function() {
-      var hash = lock.parseHash();
-      if (hash) {
-        if (!hash.error) {
-          localStorage.setItem('id_token', hash.id_token);
-          reloadProfile(hash.id_token);                     
-        }
-      } 
-``` 
-
-The JWT token received on the login is saved to localStorage and will be used later to invoke the API. It is also used to fetch the user's profile.
+The access_token obtained during login is saved to localStorage and will be used later to invoke the API. It is also used to fetch the user's profile.
 
 ![](./img/multitenant-spa.png)
 
@@ -109,6 +83,7 @@ app.use('/api', expressJwt({
 ```
 
 Because of the multi-tenant support, the secret used to sign tokens is not static and hence a `secretCallback` is used. The secretCallback supports verifying tokens signed with **HS256** algorithm (clientId) and **RS256** (asymmetric keys). It uses an LRU cache to store the secrets. 
+
 
 ```js
 function secretCallback (req, header, payload, cb){
