@@ -228,7 +228,7 @@ module.exports = [
 
 ### 7. Use the App!
 
-1. Navigate to `http://tenant1-yourcompany.com:3000`, login with tenant1's crentials and call the API. You should see the data associated with tenant1.
+1. Navigate to `http://tenant1-yourcompany.com:3000`, login with tenant1's credentials and call the API. You should see the data associated with tenant1.
 2. Navitage to `http://tenant2-yourcompany.com:3000` and do the same for tenant2.
 
 ## What is Auth0?
