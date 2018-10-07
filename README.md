@@ -87,7 +87,7 @@ Because of the multi-tenant support, the secret used to sign tokens is not stati
 
 ```js
 function secretCallback (req, header, payload, cb){
-	var cacheKey = payload.iss + '|' + payload.aud ;
+  var cacheKey = payload.iss + '|' + payload.aud ;
   var cachedSecret = secretsCache.get(cacheKey);
   if (cachedSecret) { 
     return cb(null, cachedSecret);
@@ -180,9 +180,9 @@ You can name each tenant as `tenantname-yourcompany.auth0.com`.
 For each of the Auth0 accounts:
 
 * Make sure there is at least one Auth0 Application and take note of its **clientId**.
-* Make sure there is at least one **Idenity Provider** enabled for users to login.
+* Make sure there is at least one **Identity Provider** enabled for users to login.
 * Take note of the Applications **ClientSecret**. It will be used by the API to validate the tokens.
-	
+  
   Alternatively, if the client doesn't want to share the secret, the API can validate tokens using the public key. In this case make sure they selected **RS256** under **Show Advanced Settings > JsonWebToken Token Signature Algorithm**
   ![](./img/configure-RS256.png)
 
@@ -194,9 +194,9 @@ Create a tenants.js file using tenants-sample.js as a template. For each tenant 
 
 * The Auth0 domain
 * The Auth0 ClientId
-* The Auth0 ClientSecret (optional - don't needed if tokens are signed using an asymmetric key)
+* The Auth0 ClientSecret (optional - not needed if tokens are signed using an asymmetric key)
 
-Example with tenant1 using its own auth0 domain and using asymetric keys and tenant2 having an auth0 account provisioned by your company and using the client secret:
+Example with tenant1 using its own auth0 domain and using asymmetric keys and tenant2 having an auth0 account provisioned by your company and using the client secret:
 
 ```
 module.exports = [
@@ -228,14 +228,14 @@ module.exports = [
 
 ### 7. Use the App!
 
-1. Navigate to `http://tenant1-yourcompany.com:3000`, login with tenant1's crentials and call the API. You should see the data associated with tenant1.
-2. Navitage to `http://tenant2-yourcompany.com:3000` and do the same for tenant2.
+1. Navigate to `http://tenant1-yourcompany.com:3000`, login with tenant1's credentials and call the API. You should see the data associated with tenant1.
+2. Navigate to `http://tenant2-yourcompany.com:3000` and do the same for tenant2.
 
 ## What is Auth0?
 
 Auth0 helps you to:
 
-* Add authentication with [multiple authentication sources](https://docs.auth0.com/identityproviders), either social like **Google, Facebook, Microsoft Account, LinkedIn, GitHub, Twitter, Box, Salesforce, amont others**, or enterprise identity systems like **Windows Azure AD, Google Apps, Active Directory, ADFS or any SAML Identity Provider**.
+* Add authentication with [multiple authentication sources](https://docs.auth0.com/identityproviders), either social like **Google, Facebook, Microsoft Account, LinkedIn, GitHub, Twitter, Box, Salesforce, among others**, or enterprise identity systems like **Windows Azure AD, Google Apps, Active Directory, ADFS or any SAML Identity Provider**.
 * Add authentication through more traditional **[username/password databases](https://docs.auth0.com/mysql-connection-tutorial)**.
 * Add support for **[linking different user accounts](https://docs.auth0.com/link-accounts)** with the same user.
 * Support for generating signed [Json Web Tokens](https://docs.auth0.com/jwt) to call your APIs and **flow the user identity** securely.
