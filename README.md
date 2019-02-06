@@ -202,7 +202,7 @@ Example with tenant1 using its own auth0 domain and using asymetric keys and ten
 module.exports = [
   {
     name: 'tenant1',
-    auth0Domain: 'tenant1-custom-domain.auth0.com',
+    auth0Domain: 'tenant1-yourcompany.auth0.com',
     auth0ClientId:'6Y97vVD...C0sxSebDnw7R'
   },
   {
