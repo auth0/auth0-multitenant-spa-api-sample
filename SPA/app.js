@@ -32,7 +32,8 @@ app.get('/', function(req, res, next) {
 
   var loginConfig = {
     auth0Domain: tenantConfig.auth0Domain,
-    auth0ClientId: tenantConfig.auth0ClientId
+    auth0ClientId: tenantConfig.auth0ClientId,
+    apiClientAudience: tenantConfig.apiClientAudience
   };
   res.render('index', loginConfig);
 
