@@ -6,6 +6,7 @@ This sample shows how to implement a multi-tenant scenario, where:
 * A single instance of a jQuery SPA + a Node.js API serves multiple customers (tenants).
 * Each tenant has its own Auth0 account, so they can have access to the Auth0 Dashboard. 
 * Each tenant configures its own Auth0 connections for authenticating its users, and for calling third party APIs.
+* Each tenant has a Machine-to-Machine app setup which represents the API running under each domain
 * Each customer accesses the App using a different domain. The tenant name is extracted from the domain.
 
 You can read more about multi-tenant scenarios here: [https://auth0.com/docs/saas-apps](https://auth0.com/docs/saas-apps).
@@ -55,13 +56,14 @@ app.get('/', function(req, res, next) {
   if (!tenantConfig) return next('Invalid Tenant ' + tenantName);
   var loginConfig = {
     auth0Domain:tenantConfig.auth0Domain,
-    auth0ClientId:tenantConfig.auth0ClientId
+    auth0ClientId:tenantConfig.auth0ClientId,
+    apiClientAudience: tenantConfig.apiClientAudience
   };
   res.render('index', loginConfig);
 });
 ```
 
-Once the initial page is rendered, the app continues as a JQuery Single Page App. It uses the `auth0Domain` and `auth0ClientId` obtained from server side to configure auth0.js, which will be used to perform the Login.
+Once the initial page is rendered, the app continues as a JQuery Single Page App. It uses the `auth0Domain`, `auth0ClientId` and `apiClientAudience` obtained from server side to configure auth0.js, which will be used to perform the Login.
 
 The access_token obtained during login is saved to localStorage and will be used later to invoke the API. It is also used to fetch the user's profile.
 
@@ -180,6 +182,7 @@ You can name each tenant as `tenantname-yourcompany.auth0.com`.
 For each of the Auth0 accounts:
 
 * Make sure there is at least one Auth0 Application and take note of its **clientId**.
+* Make sure there is at least one **Machine to Machine application** and take note of its **Audience ID**.
 * Make sure there is at least one **Idenity Provider** enabled for users to login.
 * Take note of the Applications **ClientSecret**. It will be used by the API to validate the tokens.
 	
@@ -202,7 +205,7 @@ Example with tenant1 using its own auth0 domain and using asymetric keys and ten
 module.exports = [
   {
     name: 'tenant1',
-    auth0Domain: 'tenant1-custom-domain.auth0.com',
+    auth0Domain: 'tenant1-yourcompany.auth0.com',
     auth0ClientId:'6Y97vVD...C0sxSebDnw7R'
   },
   {
